@@ -37,6 +37,7 @@ AudioLoaderTestAudioProcessor::AudioLoaderTestAudioProcessor()
             if (result.getFileExtension() == ".wav" | result.getFileExtension() == ".flac"
                 | result.getFileExtension() == ".aiff" | result.getFileExtension() == ".mp3")
             {
+                convolution.reset();
                 loadedFile = result;
                 convolution.loadImpulseResponse(result, juce::dsp::Convolution::Stereo::yes,
                     juce::dsp::Convolution::Trim::yes, getSampleRate() * 2);
@@ -116,7 +117,6 @@ void AudioLoaderTestAudioProcessor::prepareToPlay (double sampleRate, int sample
     spec.maximumBlockSize = samplesPerBlock;
     spec.sampleRate = sampleRate;
     spec.numChannels = getTotalNumOutputChannels();
-    convolution.reset();
     convolution.prepare(spec);
 
 }
