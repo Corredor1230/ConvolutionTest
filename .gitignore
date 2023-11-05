@@ -1,2 +1,4 @@
 Builds/
 JuceLibraryCode/
+*.wav
+*.wav.reapeaks
