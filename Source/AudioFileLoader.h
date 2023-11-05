@@ -19,18 +19,19 @@ public:
     ~AudioFileLoader() {};
 
     juce::File loadAudioFile();
-    void loadFileForConvolution(juce::dsp::Convolution& conv);
     void setStereo(bool stereoState);
     bool isStereo();
+    juce::File getFile();
 
-    void setLoaderWindowText(juce::String& text);
-
-private:
+    void setLoaderWindowText(juce::String text);
+    juce::File loadedFile;
 
     bool stereoState = true;
-    juce::File loadedFile;
     juce::String loaderWindowText = "Choose your file";
     std::unique_ptr<juce::FileChooser> chooser;
     juce::AudioFormatManager formatManager;
+private:
+
+
 
 };
