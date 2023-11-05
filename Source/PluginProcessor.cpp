@@ -22,27 +22,10 @@ AudioLoaderTestAudioProcessor::AudioLoaderTestAudioProcessor()
                        )
 #endif
 {
-    //loader.loadFileForConvolution(convolution);
 
-    chooser = std::make_unique<juce::FileChooser>("Choose your file",
-        juce::File{},
-        "*");
-    const auto chooserFlags = juce::FileBrowserComponent::openMode
-        | juce::FileBrowserComponent::canSelectFiles
-        | juce::FileBrowserComponent::canSelectDirectories;
+    loader.setLoaderWindowText("Escoge una respuesta de impulso");
 
-    chooser->launchAsync(chooserFlags, [this](const juce::FileChooser& fc)
-        {
-            juce::File result = fc.getResult();
-            if (result.getFileExtension() == ".wav" | result.getFileExtension() == ".flac"
-                | result.getFileExtension() == ".aiff" | result.getFileExtension() == ".mp3")
-            {
-                convolution.reset();
-                loadedFile = result;
-                convolution.loadImpulseResponse(result, juce::dsp::Convolution::Stereo::yes,
-                    juce::dsp::Convolution::Trim::yes, getSampleRate() * 2);
-            }
-        });
+    loadedFile = loader.loadAudioFile();
 }
 
 AudioLoaderTestAudioProcessor::~AudioLoaderTestAudioProcessor()
@@ -114,6 +97,12 @@ void AudioLoaderTestAudioProcessor::changeProgramName (int index, const juce::St
 //==============================================================================
 void AudioLoaderTestAudioProcessor::prepareToPlay (double sampleRate, int samplesPerBlock)
 {
+    if (loadedFile.exists())
+    {
+        convolution.reset();
+        convolution.loadImpulseResponse(loadedFile, juce::dsp::Convolution::Stereo::yes,
+            juce::dsp::Convolution::Trim::yes, getSampleRate() * 2);
+    }
     spec.maximumBlockSize = samplesPerBlock;
     spec.sampleRate = sampleRate;
     spec.numChannels = getTotalNumOutputChannels();
