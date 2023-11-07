@@ -18,7 +18,7 @@ public:
     AudioFileLoader() {};
     ~AudioFileLoader() {};
 
-    juce::File loadAudioFile();
+    void loadAudioFile();
     void setStereo(bool stereoState);
     bool isStereo();
     juce::File getFile();

@@ -10,7 +10,7 @@
 
 #include "AudioFileLoader.h"
 
-juce::File AudioFileLoader::loadAudioFile()
+void AudioFileLoader::loadAudioFile()
 {
     chooser = std::make_unique<juce::FileChooser>(loaderWindowText,
         juce::File{},
@@ -22,19 +22,20 @@ juce::File AudioFileLoader::loadAudioFile()
     chooser->launchAsync(chooserFlags, [this](const juce::FileChooser& fc)
         {
             juce::File result = fc.getResult();
-            loadedFile = result;
             if (result.getFileExtension() == ".wav" || result.getFileExtension() == ".flac"
                 || result.getFileExtension() == ".aiff" || result.getFileExtension() == ".mp3")
             {
+                loadedFile = result;
             }
         });
-    return loadedFile;
 }
 
 juce::File AudioFileLoader::getFile()
 {
-    //if (loadedFile != juce::File{})
-    return loadedFile;
+    if (loadedFile.exists())
+        return loadedFile;
+    else
+        return juce::File{};
 }
 
 void AudioFileLoader::setStereo(bool stereo)
