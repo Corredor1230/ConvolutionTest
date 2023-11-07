@@ -24,8 +24,7 @@ AudioLoaderTestAudioProcessor::AudioLoaderTestAudioProcessor()
 {
 
     loader.setLoaderWindowText("Escoge una respuesta de impulso");
-
-    loadedFile = loader.loadAudioFile();
+    loader.loadAudioFile();
 }
 
 AudioLoaderTestAudioProcessor::~AudioLoaderTestAudioProcessor()
@@ -97,6 +96,8 @@ void AudioLoaderTestAudioProcessor::changeProgramName (int index, const juce::St
 //==============================================================================
 void AudioLoaderTestAudioProcessor::prepareToPlay (double sampleRate, int samplesPerBlock)
 {
+    loadedFile = loader.getFile();
+
     if (loadedFile.exists())
     {
         convolution.reset();
@@ -150,6 +151,16 @@ void AudioLoaderTestAudioProcessor::processBlock (juce::AudioBuffer<float>& buff
 
     juce::dsp::AudioBlock<float> block{ buffer };
 
+    if (!loadedFile.exists())
+    {
+        loadedFile = loader.getFile();
+        if (loadedFile.exists())
+        {
+            convolution.reset();
+            convolution.loadImpulseResponse(loadedFile, juce::dsp::Convolution::Stereo::yes,
+                juce::dsp::Convolution::Trim::yes, getSampleRate() * 2);
+        }
+    }
 
     convolution.process(juce::dsp::ProcessContextReplacing<float>(block));
 
