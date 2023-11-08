@@ -10,7 +10,7 @@
 
 #include "AudioFileLoader.h"
 
-void AudioFileLoader::loadAudioFile()
+void AudioFileLoader::loadAudioFile(std::function<void> loadFile)
 {
     chooser = std::make_unique<juce::FileChooser>(loaderWindowText,
         juce::File{},
@@ -19,13 +19,14 @@ void AudioFileLoader::loadAudioFile()
         | juce::FileBrowserComponent::canSelectFiles
         | juce::FileBrowserComponent::canSelectDirectories;
 
-    chooser->launchAsync(chooserFlags, [this](const juce::FileChooser& fc)
+    chooser->launchAsync(chooserFlags, [this, loadFile](const juce::FileChooser& fc)
         {
             juce::File result = fc.getResult();
             if (result.getFileExtension() == ".wav" || result.getFileExtension() == ".flac"
                 || result.getFileExtension() == ".aiff" || result.getFileExtension() == ".mp3")
             {
                 loadedFile = result;
+                loadFile;
             }
         });
 }
