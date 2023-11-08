@@ -24,11 +24,17 @@ AudioLoaderTestAudioProcessor::AudioLoaderTestAudioProcessor()
 {
 
     loader.setLoaderWindowText("Escoge una respuesta de impulso");
-    loader.loadAudioFile();
+    loader.loadAudioFile(loadImpulseResponse());
 }
 
 AudioLoaderTestAudioProcessor::~AudioLoaderTestAudioProcessor()
 {
+}
+
+void AudioLoaderTestAudioProcessor::loadImpulseResponse()
+{
+    loadedFile = loader.getFile();
+
 }
 
 //==============================================================================
